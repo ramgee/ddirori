@@ -37,7 +37,6 @@ public abstract class AttributeExtractor {
 	protected Object processType(BeanContainer container,String type, String attribute) {
 		Object object = extractAttribute(container, attribute);
 		return this.typeCaster.cast(type, object);
-		
 	}
 	
 	public Object extract(BeanContainer container, String attribute) {
@@ -51,8 +50,15 @@ public abstract class AttributeExtractor {
     	Matcher stringMatcher = Parser.getMatcher(attribute, REGEX_STRING);
 		Matcher definitionMatcher = Parser.getMatcher(attribute, REGEX_DEFINITION);
 		Matcher typeMatcher = Parser.getMatcher(attribute, REGEX_TYPE);
+		
+		StringBuffer buffer = new StringBuffer();
+		
 		if(definitionMatcher.find()) {
-			return processReservedWord(definitionMatcher.group(1));
+			
+			definitionMatcher.appendReplacement(buffer, (String)processReservedWord(definitionMatcher.group(1)));
+			definitionMatcher.appendTail(buffer);
+			
+			return extractAttribute(container, buffer.toString());
 		}
 		
 		if(typeMatcher.find()) {
@@ -62,8 +68,6 @@ public abstract class AttributeExtractor {
 		if(objectMatcher.find()) {
 			return processMethod(container, objectMatcher.group(1));
 		}
-		
-		StringBuffer buffer = new StringBuffer();
 		
 	    while (stringMatcher.find()) {
 	      Object resultCandidator = processMethod(container, stringMatcher.group(1));

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.beatific.ddirori.attribute.TypeResolverCreationException;
-import org.beatific.ddirori.attribute.annotation.ArgumentType;
+import org.beatific.ddirori.attribute.annotation.DefinitionType;
 import org.beatific.ddirori.attribute.resolver.DefinitionTypeResolver;
 import org.beatific.ddirori.utils.AnnotationUtils;
 
@@ -23,8 +23,8 @@ public class DefinitionTypeCaster {
 	}
 	
 	public void init() {
-		for(Class<?> clazz : AnnotationUtils.findClassByAnnotation(basePackage, ArgumentType.class)) {
-			ArgumentType annotation = clazz.getAnnotation(ArgumentType.class);
+		for(Class<?> clazz : AnnotationUtils.findClassByAnnotation(basePackage, DefinitionType.class)) {
+			DefinitionType annotation = clazz.getAnnotation(DefinitionType.class);
 			try {
 				resolvers.put(annotation.type(), (DefinitionTypeResolver<?>)clazz.newInstance());
 			} catch (InstantiationException e) {
